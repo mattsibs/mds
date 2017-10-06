@@ -20,18 +20,20 @@ public class IntegrationRunner {
     }
 
     public Flux<Particle> run() {
-        particleService.findAll()
+        return particleService.findAll()
                 .parallel()
                 .map(integrationService::iterate)
                 .doOnNext(particleService::save)
                 .sequential()
+                .doOnComplete(this::updateParticles);
+    }
+
+    private Long updateParticles() {
+        return particleService.findAll()
+                .doOnNext(Particle::updateIteration)
+                .doOnNext(particleService::save)
                 .count()
                 .block();
-
-
-        return particleService.findAll()
-                .map(Particle::updateIteration)
-                .doOnNext(particleService::save);
     }
 
 }

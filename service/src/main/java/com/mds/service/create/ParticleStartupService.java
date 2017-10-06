@@ -16,14 +16,12 @@ public class ParticleStartupService {
     }
 
     public void initializeParticles() {
-//        particleRepository.deleteAll().block();
-//
-//        particleLoader.load(particle ->
-//                particleRepository.save(particle)
-//                        .doOnNext(System.out::println)
-//                        .block()
-//        );
-//
-//        System.out.println();
+        particleRepository.deleteAll().block();
+
+        particleLoader.load(particle ->
+                particleRepository.save(particle)
+                        .doOnNext(System.out::println)
+                        .block()
+        );
     }
 }

@@ -3,6 +3,7 @@ package com.mds.data.math;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+
 @Data
 @RequiredArgsConstructor
 public class Vector {

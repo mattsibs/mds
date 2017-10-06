@@ -23,8 +23,7 @@ public class Particle {
     }
 
     public Particle updateIteration() {
-        setCurrentIteration(getNextIteration());
-        setNextIteration(null);
+        setCurrentIteration(nextIteration);
         return this;
     }
 }

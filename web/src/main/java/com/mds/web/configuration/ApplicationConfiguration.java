@@ -37,11 +37,6 @@ import java.util.Collections;
 public class ApplicationConfiguration extends MongoConfigurationSupport {
 
     @Bean
-    public LoggingEventListener validatingMongoEventListener() {
-        return new LoggingEventListener();
-    }
-
-    @Bean
     public MongoClient mongoClient() {
         return MongoClients.create(String.format("mongodb://localhost:%d", 27017));
     }
