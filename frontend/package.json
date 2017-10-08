@@ -24,7 +24,9 @@
     "rxjs": "^5.0.1",
     "ts-helpers": "^1.1.1",
     "zone.js": "^0.7.2",
-    "ng-event-source": "*"
+    "ng-event-source": "*",
+    "three": "^0.80.1"
+
   },
   "devDependencies": {
     "@angular/compiler-cli": "^2.3.1",

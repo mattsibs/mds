@@ -1,7 +1,6 @@
 package com.mds.web;
 
 import com.mds.service.create.ParticleStartupService;
-import com.mds.service.runner.IntegrationRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -18,9 +17,6 @@ public class Application implements CommandLineRunner {
 
     @Autowired
     private ParticleStartupService particleStartupService;
-
-    @Autowired
-    private IntegrationRunner integrationRunner;
 
     public static void main(final String... args) {
         SpringApplication.run(Application.class, args);
