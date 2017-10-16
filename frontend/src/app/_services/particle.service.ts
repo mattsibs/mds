@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map'
 
 import { Particle } from '../_models/index';
+import {EventSourcePolyfill} from 'ng-event-source';
 
 @Injectable()
 export class ParticleService {
@@ -13,13 +14,20 @@ export class ParticleService {
 
     }
 
-    getParticles(): Observable<Particle[]> {
-        let options = new RequestOptions();
-
-        this.http.get('http://localhost:8080/particles/2', options)
-          .subscribe((data: Response) => console.log(data), console.error);
-
-        return this.http.get('http://localhost:8080/particles/2', options)
-            .map((response: Response) => response.json());
+    getParticles(particleConsumer, iterations): void {
+         let eventSource = new EventSourcePolyfill('http://localhost:8080/particles/' + iterations);
+         eventSource.onmessage = (data) => this.setParticle(data, eventSource, particleConsumer);
     }
+
+    setParticle(data, eventSource, particleConsumer) : void {
+           var responseObject = JSON.parse(data.data);
+           var isComplete = responseObject['isComplete'];
+
+           if (isComplete) {
+              eventSource.close();
+              return;
+           }
+
+           particleConsumer(responseObject);
+       }
 }

@@ -6,11 +6,13 @@ import { routing }  from './app.routing';
 
 import { AppComponent } from './app.component';
 import { ParticleService } from './_services/index';
+import { SimulationComponent } from './simulation/simulation.component';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    SimulationComponent
   ],
   imports: [
     BrowserModule,

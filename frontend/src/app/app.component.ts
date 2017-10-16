@@ -13,36 +13,5 @@ import {EventSourcePolyfill} from 'ng-event-source';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-   particles: Particle[] = [];
 
-   particle = {};
-   particleString = "";
-
-   constructor(private particleService: ParticleService) { }
-
-   ngOnInit() {
-    console.log("onInit");
-    let eventSource = new EventSourcePolyfill('http://localhost:8080/particles/10');
-    eventSource.onmessage = (data) => this.setParticle(data, eventSource);
-   }
-
-   setParticle(data, eventSource) : void {
-       var responseObject = JSON.parse(data.data);
-       var isComplete = responseObject['isComplete'];
-
-       console.log(isComplete);
-       if (isComplete) {
-          eventSource.close();
-          return;
-       }
-
-       var id = responseObject['particle']['id'];
-       this.particle[id] = responseObject;
-
-       this.particleString = "";
-       this.particleString = JSON.stringify(this.particle);
-
-
-
-   }
 }
