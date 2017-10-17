@@ -1,2 +1,7 @@
 <canvas #canvas
         (window:resize)="onResize($event)"></canvas>
+
+<input #iterations/>
+<button (click)="runSimulation(iterations.value)">
+  Run
+</button>

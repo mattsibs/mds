@@ -24,6 +24,8 @@ export class SimulationComponent implements AfterViewInit {
     private scene: THREE.Scene;
     private cube;
 
+    private particleMap = {};
+
     @Input()
     public fieldOfView: number = 75;
 
@@ -45,19 +47,27 @@ export class SimulationComponent implements AfterViewInit {
     private renderer: THREE.WebGLRenderer;
 
     private controls;
-
+    private sphereGeometry;
+    private sphereMaterial;
     constructor(private particleService: ParticleService) { }
 
     private createScene() {
       this.scene = new THREE.Scene();
-      var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-      var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-      this.cube = new THREE.Mesh( geometry, material );
-      this.scene.add( this.cube );
+      this.sphereGeometry = new THREE.SphereBufferGeometry( 0.1, 8, 6, 0, 6.3, 0, 3.1 );
+      var parameters = {
+        wireframe: true
+      };
+
+      this.sphereMaterial = new THREE.MeshDepthMaterial( parameters );
 
       var ambientLight = new THREE.AmbientLight(0x383838);
       this.scene.add(ambientLight);
 
+      var plane = new THREE.GridHelper(100, 10);
+      this.scene.add(plane);
+
+      var cubeAxis = new THREE.AxisHelper(20);
+      this.scene.add(cubeAxis);
     }
 
     private createCamera() {
@@ -105,6 +115,45 @@ export class SimulationComponent implements AfterViewInit {
       this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
     }
 
+    public runSimulation(iterations) {
+      this.particleService.iterateParticles(this.consumeParticle.bind(this), iterations);
+    }
+
+    public createParticles() {
+      this.particleService.getParticles(this.addParticleToScene.bind(this));
+    }
+
+
+    public addParticleToScene(data) {
+      var id = data['id'];
+
+      var sphere = new THREE.Mesh( this.sphereGeometry, this.sphereMaterial );
+      this.updatePosition(sphere, data);
+
+      this.particleMap[id] = sphere;
+      this.scene.add( this.particleMap[id] );
+
+
+    }
+
+    public consumeParticle(data) {
+      var id = data['id'];
+      var particle = this.particleMap[id];
+
+      if (!particle) {
+        console.log("Id not found " + id);
+        return;
+      }
+
+      this.updatePosition(particle, data);
+
+    }
+
+    private updatePosition(particle, data) {
+     particle.position.x = 0.1 * data['currentIteration']['position']['x'];
+          particle.position.y = 0.1 * data['currentIteration']['position']['y'];
+          particle.position.z = 0.1 * data['currentIteration']['position']['z'];
+    }
 
     private createControls() {
       this.controls = new TrackballControls(this.camera, this.canvas);
@@ -115,10 +164,11 @@ export class SimulationComponent implements AfterViewInit {
 
     ngAfterViewInit() {
       this.createScene();
+      this.createParticles();
+      console.log(this.particleMap);
       this.createCamera();
       this.createControls();
       this.startRendering();
     }
-
 
 }

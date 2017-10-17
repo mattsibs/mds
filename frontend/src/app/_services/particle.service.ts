@@ -14,7 +14,12 @@ export class ParticleService {
 
     }
 
-    getParticles(particleConsumer, iterations): void {
+    getParticles(particleConsumer): void {
+         let eventSource = new EventSourcePolyfill('http://localhost:8080/particles');
+         eventSource.onmessage = (data) => this.setParticle(data, eventSource, particleConsumer);
+    }
+
+    iterateParticles(particleConsumer, iterations): void {
          let eventSource = new EventSourcePolyfill('http://localhost:8080/particles/' + iterations);
          eventSource.onmessage = (data) => this.setParticle(data, eventSource, particleConsumer);
     }
@@ -28,6 +33,6 @@ export class ParticleService {
               return;
            }
 
-           particleConsumer(responseObject);
+           particleConsumer(responseObject['particle']);
        }
 }
