@@ -1,8 +1,5 @@
 package com.mds.web.controller;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.mds.data.particle.Particle;
 import com.mds.data.particle.ParticleRepository;
 import com.mds.service.runner.IntegrationRunner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,25 +41,4 @@ public class ParticleController {
                 .map(ParticleResponse::inComplete);
     }
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class ParticleResponse {
-
-        @JsonProperty
-        private final Particle particle;
-        @JsonProperty
-        private final boolean isComplete;
-
-        private ParticleResponse(final Particle particle, final boolean isComplete) {
-            this.particle = particle;
-            this.isComplete = isComplete;
-        }
-
-        public static ParticleResponse inComplete(final Particle particle) {
-            return new ParticleResponse(particle, false);
-        }
-
-        public static ParticleResponse complete() {
-            return new ParticleResponse(null, true);
-        }
-    }
 }
