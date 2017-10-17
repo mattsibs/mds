@@ -7,8 +7,9 @@ import {
 } from '@angular/core';
 
 import * as THREE from "three";
-
 import { ParticleService } from '../_services/index';
+
+var TrackballControls = require('three-trackballcontrols');
 
 @Component({
   selector: 'app-simulation',
@@ -43,24 +44,7 @@ export class SimulationComponent implements AfterViewInit {
 
     private renderer: THREE.WebGLRenderer;
 
-
-    /* USER INTERACTION PROPERTIES */
-
-    private isUserInteracting: boolean = false;
-
-    private latitude: number = 0;
-
-    private longitude: number = 0;
-
-    private onPointerDownPointerX: number = 0;
-
-    private onPointerDownPointerY: number = 0;
-
-    private onPointerDownPointerZ: number = 0;
-
-    private onPointerDownLongitude: number = 0;
-
-    private onPointerDownLatitude: number = 0;
+    private controls;
 
     constructor(private particleService: ParticleService) { }
 
@@ -70,6 +54,10 @@ export class SimulationComponent implements AfterViewInit {
       var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
       this.cube = new THREE.Mesh( geometry, material );
       this.scene.add( this.cube );
+
+      var ambientLight = new THREE.AmbientLight(0x383838);
+      this.scene.add(ambientLight);
+
     }
 
     private createCamera() {
@@ -105,40 +93,9 @@ export class SimulationComponent implements AfterViewInit {
       (function render() {
         requestAnimationFrame(render);
         component.renderer.render(component.scene, component.camera);
+        component.controls.update();
       }());
 
-    }
-
-     public onMouseDown(event: MouseEvent) {
-      event.preventDefault();
-
-      this.isUserInteracting = true;
-      this.onPointerDownPointerX = event.clientX;
-      this.onPointerDownPointerY = event.clientY;
-      this.onPointerDownLatitude = this.latitude;
-      this.onPointerDownLongitude = this.longitude;
-    }
-
-    public onMouseMove(event: MouseEvent) {
-      if (this.isUserInteracting !== true) {
-        // Propagate event
-        return true;
-      }
-
-      this.latitude = (event.clientY - this.onPointerDownPointerY) * 0.1 +
-        this.onPointerDownLatitude;
-      this.longitude = (this.onPointerDownPointerX - event.clientX) * 0.1 +
-        this.onPointerDownLongitude;
-
-    }
-
-    public onMouseUp(event: MouseEvent) {
-      this.isUserInteracting = false;
-    }
-
-    public onWheel(event: MouseWheelEvent) {
-      this.camera.fov += event.deltaY * 0.05;
-      this.camera.updateProjectionMatrix();
     }
 
     public onResize(event: Event) {
@@ -148,9 +105,18 @@ export class SimulationComponent implements AfterViewInit {
       this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
     }
 
+
+    private createControls() {
+      this.controls = new TrackballControls(this.camera, this.canvas);
+      this.controls.rotateSpeed = 1.0;
+      this.controls.zoomSpeed = 1.0;
+      this.controls.panSpeed = 1.0;
+    }
+
     ngAfterViewInit() {
       this.createScene();
       this.createCamera();
+      this.createControls();
       this.startRendering();
     }
 

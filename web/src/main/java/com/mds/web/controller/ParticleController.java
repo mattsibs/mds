@@ -1,6 +1,5 @@
 package com.mds.web.controller;
 
-import com.mds.data.particle.ParticleRepository;
 import com.mds.service.runner.IntegrationRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -18,11 +17,12 @@ import static java.util.stream.Collectors.toList;
 @RestController
 public class ParticleController {
 
-    @Autowired
-    private IntegrationRunner integrationRunner;
+    private final IntegrationRunner integrationRunner;
 
     @Autowired
-    private ParticleRepository particleRepository;
+    public ParticleController(final IntegrationRunner integrationRunner) {
+        this.integrationRunner = integrationRunner;
+    }
 
     @CrossOrigin
     @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE, value = "/particles/{iterations}")
