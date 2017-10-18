@@ -1,3 +1,3 @@
 startup:
   particle:
-    file: classpath:freefall.csv
+    file: classpath:box.csv

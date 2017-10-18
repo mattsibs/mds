@@ -28,10 +28,11 @@ export class ParticleService {
            var responseObject = JSON.parse(data.data);
            var isComplete = responseObject['isComplete'];
 
-           if (isComplete) {
+           if (isComplete === true) {
               eventSource.close();
               return;
            }
+
 
            particleConsumer(responseObject['particle']);
        }

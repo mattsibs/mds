@@ -19,7 +19,6 @@ public class Vector {
                 .scale(-2.0 * pointPlaneDistance);
 
         return this.add(reflectingVector);
-
     }
 
     public double magnitude() {

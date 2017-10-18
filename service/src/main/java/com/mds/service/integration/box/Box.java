@@ -4,6 +4,9 @@ import com.mds.data.math.Plane;
 import com.mds.data.math.Vector;
 
 import java.util.List;
+import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
 
 public class Box {
 
@@ -13,12 +16,15 @@ public class Box {
         this.planes = planes;
     }
 
-    public boolean inBox(final Vector vector) {
+    public List<Plane> planesTraversed(final Vector vector) {
         return planes.stream()
-                .allMatch(plane -> insideOfPlane(vector, plane));
+                .map(plane -> findPlaneTraversed(vector, plane))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(toList());
     }
 
-    private Boolean insideOfPlane(final Vector vector, final Plane plane) {
+    private Optional<Plane> findPlaneTraversed(final Vector vector, final Plane plane) {
         Vector planeVector = plane.getPlaneVector();
         Vector normalVector = planeVector.unitVector();
 
@@ -26,10 +32,10 @@ public class Box {
         Vector projectedVector = normalVector.scale(dotProduct);
 
         if (projectedVector.magnitude() > Math.abs(plane.getDistanceFromOrigin())) {
-            return false;
+            return Optional.of(plane);
         }
 
-        return true;
+        return Optional.empty();
     }
 
 }

@@ -53,12 +53,15 @@ export class SimulationComponent implements AfterViewInit {
 
     private createScene() {
       this.scene = new THREE.Scene();
-      this.sphereGeometry = new THREE.SphereBufferGeometry( 0.1, 8, 6, 0, 6.3, 0, 3.1 );
+      this.scene.background = new THREE.Color( 0xffffff );
+
+      this.sphereGeometry = new THREE.SphereBufferGeometry( 0.01, 8, 6, 0, 6.3, 0, 3.1 );
       var parameters = {
-        wireframe: true
+        vertexColors: THREE.FaceColors,
+        color: 0x027F10
       };
 
-      this.sphereMaterial = new THREE.MeshDepthMaterial( parameters );
+      this.sphereMaterial = new THREE.MeshPhongMaterial( parameters );
 
       var ambientLight = new THREE.AmbientLight(0x383838);
       this.scene.add(ambientLight);

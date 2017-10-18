@@ -28,7 +28,8 @@ public class BoxTest {
         Box box = new Box(planes);
         Vector vector = new Vector(0.5, 0.5, 0.5);
 
-        assertThat(box.inBox(vector)).isTrue();
+        assertThat(box.planesTraversed(vector))
+                .isEmpty();
     }
 
     @Test
@@ -36,7 +37,8 @@ public class BoxTest {
         Box box = new Box(planes);
         Vector vector = new Vector(0.5, -0.5, -0.5);
 
-        assertThat(box.inBox(vector)).isTrue();
+        assertThat(box.planesTraversed(vector))
+                .isEmpty();
     }
 
     @Test
@@ -44,7 +46,8 @@ public class BoxTest {
         Box box = new Box(planes);
         Vector vector = new Vector(1.0, 1.0, 0.9);
 
-        assertThat(box.inBox(vector)).isTrue();
+        assertThat(box.planesTraversed(vector))
+                .isEmpty();
     }
 
     @Test
@@ -52,16 +55,7 @@ public class BoxTest {
         Box box = new Box(planes);
         Vector vector = new Vector(1.0, 1.0, 1.1);
 
-        assertThat(box.inBox(vector)).isFalse();
+        assertThat(box.planesTraversed(vector)).isNotEmpty();
     }
 
-    @Test
-    public void inBoxWithNoneZeroVector_VectorIsOutside_returnsTrue() {
-        Vector centreVector = new Vector(0.5, 0.0, 0.5);
-        Box box = new Box(planes);
-
-        Vector vector = new Vector(1.6, -0.5, -0.5);
-
-        assertThat(box.inBox(vector)).isFalse();
-    }
 }

@@ -9,7 +9,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sun.dc.pr.PRError;
+
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -47,8 +48,8 @@ public class BoxedIntegrationServiceTest {
 
     @Test
     public void iterate_ParticleInBox_returnsSameParticle() throws Exception {
-        given(box.inBox(particlePosition))
-                .willReturn(true);
+        given(box.planesTraversed(particlePosition))
+                .willReturn(Collections.emptyList());
 
         Particle iterate = boxedIntegrationService.iterate(particle);
 

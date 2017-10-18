@@ -1,8 +1,12 @@
 package com.mds.service.integration;
 
+import com.mds.data.math.Iteration;
+import com.mds.data.math.Plane;
 import com.mds.data.math.Vector;
 import com.mds.data.particle.Particle;
 import com.mds.service.integration.box.Box;
+
+import java.util.List;
 
 public class BoxedIntegrationService implements IntegrationService {
 
@@ -19,11 +23,30 @@ public class BoxedIntegrationService implements IntegrationService {
         Particle iteratedParticle = delegate.iterate(particle);
         Vector particlePosition = iteratedParticle.getNextIteration().getPosition();
 
-        if (box.inBox(particlePosition)) {
+        List<Plane> planesTraversed = box.planesTraversed(particlePosition);
+
+        if (planesTraversed.isEmpty()) {
             return iteratedParticle;
         }
 
+        Plane plane = planesTraversed.get(0);
+        Iteration nextIteration = particle.getNextIteration();
 
-        return null;
+        Vector reflectedPosition = nextIteration
+                .getPosition()
+                .reflection(plane);
+
+        Vector reflectedVelocity = nextIteration
+                .getPosition()
+                .reflection(plane);
+
+        particle.setNextIteration(
+                new Iteration(
+                        nextIteration.getPosition(),
+                        reflectedVelocity,
+                        nextIteration.getAcceleration()
+                ));
+
+        return particle;
     }
 }
